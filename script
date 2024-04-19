@@ -1,0 +1,30 @@
+//@version=5
+strategy("Discounted Buy Strategy", overlay=true)
+
+// Define the lookback period for finding the swing low
+var int lookback = 45
+
+// Define the discount to apply to the swing low price for the buy order
+var float discount = 25.0
+
+// Example bullish condition (define this according to your strategy's criteria)
+var bool bull1met = ta.crossover(ta.sma(close, 14), ta.sma(close, 28))
+
+// Calculate the swing low within the lookback period
+var float swingLow = ta.lowest(low, lookback)
+
+// Calculate the discounted buy price
+var float discountedBuyPrice = swingLow - discount
+
+// Plot the swing low and the discounted buy price for visual reference
+plot(swingLow, color=color.blue, title="Swing Low")
+plot(discountedBuyPrice, color=color.green, title="Discounted Buy Price")
+
+// Strategy execution logic
+if (bull1met)
+    // Check if the current price is at or below the discounted buy price
+    if (close <= discountedBuyPrice)
+        // Place the buy order
+        strategy.entry("Buy Order", strategy.long)
+
+// Optionally, add exit logic or stop loss based on your strategy's requirements
